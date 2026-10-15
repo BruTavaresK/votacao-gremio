@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votação Grêmio - EE Portal da Juréia</title>
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-200 min-h-screen flex items-center justify-center font-sans">
+    
+    <!-- Container Principal do App -->
+    <div id="app" class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md relative overflow-hidden">
+
+        <!-- ================= TELA INICIAL ================= -->
+        <div id="tela-inicial" class="block text-center">
+            
+            <!-- Logos na Tela Inicial -->
+            <div class="flex justify-center items-center gap-8 mb-6">
+                <img src="portal.png" alt="Logo Portal da Juréia" class="w-28 h-28 object-contain drop-shadow-md">
+                <img src="gresp.png" alt="Logo Grêmio" class="w-28 h-28 object-contain drop-shadow-md">
+            </div>
+
+            <h1 class="text-3xl font-bold mb-2 text-blue-900">Eleições do Grêmio 2026</h1>
+            <h2 class="text-lg mb-8 text-gray-600 font-semibold">EE Portal da Juréia</h2>
+            
+            <!-- Botões das Duas Urnas -->
+            <div class="space-y-4 flex flex-col">
+                <button id="btn-entrar-urna-1" class="bg-green-600 text-white py-4 px-4 rounded-lg hover:bg-green-700 transition font-bold text-xl shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                    <span>🗳️</span> Iniciar Votação Urna 1
+                </button>
+                <button id="btn-entrar-urna-2" class="bg-blue-600 text-white py-4 px-4 rounded-lg hover:bg-blue-700 transition font-bold text-xl shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                    <span>🗳️</span> Iniciar Votação Urna 2
+                </button>
+
+                <button id="btn-entrar-admin" class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900 transition mt-4 text-sm font-semibold cursor-pointer">
+                    Acesso Administrador
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= TELA ADMIN ================= -->
+        <div id="tela-admin" class="hidden">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Login da Administração</h2>
+            <input type="email" id="admin-email" placeholder="E-mail" class="w-full border-2 border-gray-300 p-3 mb-4 rounded focus:outline-none focus:border-blue-500">
+            <input type="password" id="admin-senha" placeholder="Senha" class="w-full border-2 border-gray-300 p-3 mb-6 rounded focus:outline-none focus:border-blue-500">
+            <button id="btn-login" class="bg-gray-800 text-white font-bold w-full py-3 rounded hover:bg-gray-900 transition cursor-pointer">Entrar</button>
+            <p id="admin-erro" class="text-red-600 mt-3 text-sm font-bold text-center hidden"></p>
+            <div class="text-center mt-4">
+                <button id="btn-voltar-admin" class="text-sm text-gray-500 hover:text-gray-800 underline cursor-pointer">Voltar</button>
+            </div>
+        </div>
+
+        <!-- ================= TELA DE VOTAÇÃO (URNA) ================= -->
+        <div id="tela-votacao" class="hidden">
+            
+            <!-- Indicador da Urna Ativa -->
+            <div class="text-center mb-3">
+                <span id="badge-urna" class="bg-gray-800 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    URNA SELECIONADA
+                </span>
+            </div>
+
+            <!-- Cabeçalho Votação com os Logos -->
+            <div class="flex justify-between items-center mb-6 border-b-2 border-gray-200 pb-4">
+                <div class="text-xs font-bold text-gray-700 flex flex-col items-center text-center w-1/2">
+                    <img src="portal.png" alt="Logo Portal da Juréia" class="w-24 h-24 object-contain mb-2 drop-shadow-sm">
+                    EE Portal da Juréia
+                </div>
+                
+                <div class="border-l-2 border-gray-200 h-20"></div>
+                
+                <div class="text-xs font-bold text-gray-700 flex flex-col items-center text-center w-1/2">
+                    <img src="gresp.png" alt="Logo Grêmio Estudantil Paulista" class="w-24 h-24 object-contain mb-2 drop-shadow-sm">
+                    Grêmio Estudantil Paulista
+                </div>
+            </div>
+
+            <h2 class="text-lg font-bold mb-4 text-center text-gray-700">Digite o número da chapa:</h2>
+            
+            <div class="flex justify-center mb-4">
+                <input type="text" id="numero-chapa" maxlength="2" placeholder="00" class="text-center text-5xl w-32 h-20 border-4 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 tracking-widest font-mono shadow-inner">
+            </div>
+            
+            <div id="info-chapa" class="h-32 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-2">
+            </div>
+
+            <!-- Botões da Urna -->
+            <div class="mt-6 flex justify-between gap-4">
+                <button id="btn-corrige" class="bg-orange-500 text-white w-1/2 py-3 rounded hover:bg-orange-600 font-bold text-lg shadow-md cursor-pointer">CORRIGE</button>
+                <button id="btn-confirma" class="bg-green-500 text-white w-1/2 py-3 rounded hover:bg-green-600 font-bold text-lg shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer" disabled>CONFIRMA</button>
+            </div>
+            
+            <div class="text-center mt-6">
+                <button id="btn-voltar-votacao" class="text-sm text-gray-500 hover:text-gray-800 underline cursor-pointer">Cancelar e Voltar ao Início</button>
+            </div>
+        </div>
+
+        <!-- ================= TELA FIM ================= -->
+        <div id="tela-fim" class="hidden text-center py-10">
+            <h1 class="text-6xl font-black text-gray-800 tracking-widest mb-4">FIM</h1>
+            <p class="text-xl font-bold text-green-600">Voto computado com sucesso!</p>
+        </div>
+
+        <!-- ================= TELA BLOQUEADA ================= -->
+        <div id="tela-bloqueada" class="hidden text-center py-8">
+            <div class="text-6xl mb-4 animate-bounce">🔒</div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Urna Bloqueada</h2>
+            <p class="text-gray-600 mb-6 font-semibold px-4">Aguarde a liberação pelo mesário para o próximo estudante votar.</p>
+            <span id="badge-urna-bloqueada" class="bg-gray-800 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                URNA ATIVA
+            </span>
+        </div>
+
+    </div>
+
+    <!-- LÓGICA DO SISTEMA -->
+    <script type="module">
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { collection, addDoc, serverTimestamp, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        
+        // IMPORTA O FIREBASE DO ARQUIVO SEPARADO
+        import { auth, db } from "./firebase.js";
+
+        const somUrna = new Audio('urna.mp3');
+
+        // Mapeamento dos Elementos DOM
+        const telaInicial = document.getElementById('tela-inicial');
+        const telaAdmin = document.getElementById('tela-admin');
+        const telaVotacao = document.getElementById('tela-votacao');
+        const telaFim = document.getElementById('tela-fim');
+        const telaBloqueada = document.getElementById('tela-bloqueada');
+        const badgeUrna = document.getElementById('badge-urna');
+        const badgeUrnaBloqueada = document.getElementById('badge-urna-bloqueada');
+
+        const inputNumero = document.getElementById('numero-chapa');
+        const infoChapa = document.getElementById('info-chapa');
+        const btnConfirma = document.getElementById('btn-confirma');
+        const btnCorrige = document.getElementById('btn-corrige');
+        const btnLogin = document.getElementById('btn-login');
+        
+        let chapaSelecionada = null;
+        let nomeChapa = "";
+        let urnaAtual = null;
+        let unsubscribeStatus = null;
+
+        function abrirTelaCheia() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+            }
+        }
+
+        function fecharTelaCheia() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(err => console.log(err));
+            }
+        }
+
+        function mostrarTela(tela) {
+            telaInicial.classList.add('hidden');
+            telaAdmin.classList.add('hidden');
+            telaVotacao.classList.add('hidden');
+            telaFim.classList.add('hidden');
+            telaBloqueada.classList.add('hidden');
+            tela.classList.remove('hidden');
+        }
+
+        function iniciarUrna(numeroUrna) {
+            urnaAtual = numeroUrna;
+            badgeUrna.innerText = `URNA ${numeroUrna}`;
+            badgeUrnaBloqueada.innerText = `URNA ${numeroUrna}`;
+            
+            const badgeColor = numeroUrna === 1 ? "bg-green-700" : "bg-blue-700";
+            badgeUrna.className = `${badgeColor} text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider`;
+            badgeUrnaBloqueada.className = `${badgeColor} text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider`;
+
+            if (unsubscribeStatus) unsubscribeStatus();
+
+            unsubscribeStatus = onSnapshot(doc(db, "status_urnas", `urna_${numeroUrna}`), (snapshot) => {
+                const dados = snapshot.data();
+                if (dados && dados.bloqueada === true) {
+                    mostrarTela(telaBloqueada);
+                } else {
+                    mostrarTela(telaVotacao);
+                    limparUrna();
+                }
+            });
+
+            abrirTelaCheia();
+        }
+
+        document.getElementById('btn-entrar-urna-1').addEventListener('click', () => iniciarUrna(1));
+        document.getElementById('btn-entrar-urna-2').addEventListener('click', () => iniciarUrna(2));
+        document.getElementById('btn-entrar-admin').addEventListener('click', () => mostrarTela(telaAdmin));
+        document.getElementById('btn-voltar-admin').addEventListener('click', () => mostrarTela(telaInicial));
+        
+        document.getElementById('btn-voltar-votacao').addEventListener('click', () => {
+            if (unsubscribeStatus) unsubscribeStatus();
+            mostrarTela(telaInicial);
+            fecharTelaCheia();
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramUrna = urlParams.get('urna');
+        if (paramUrna === '1' || paramUrna === '2') {
+            iniciarUrna(parseInt(paramUrna));
+        }
+
+        inputNumero.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            const numero = e.target.value;
+
+            if (numero.length === 2) {
+                if (numero === '42') {
+                    chapaSelecionada = '42';
+                    nomeChapa = 'Aurora';
+                    infoChapa.innerHTML = `
+                        <div class="text-2xl font-black text-blue-700 uppercase tracking-wide mb-2">Chapa ${nomeChapa}</div>
+                        <div class="w-16 h-16 bg-blue-200 rounded-full flex items-center justify-center text-3xl shadow-sm border-2 border-blue-400">🌅</div>
+                    `;
+                    btnConfirma.disabled = false;
+
+                } else if (numero === '27') {
+                    chapaSelecionada = '27';
+                    nomeChapa = 'Evolution';
+                    infoChapa.innerHTML = `
+                        <div class="text-2xl font-black text-purple-700 uppercase tracking-wide mb-2">Chapa ${nomeChapa}</div>
+                        <div class="w-16 h-16 bg-purple-200 rounded-full flex items-center justify-center text-3xl shadow-sm border-2 border-purple-400">🚀</div>
+                    `;
+                    btnConfirma.disabled = false;
+
+                } else {
+                    chapaSelecionada = null;
+                    infoChapa.innerHTML = `
+                        <p class="text-red-600 font-bold text-center px-4 leading-tight">
+                            Você deve escolher uma das chapas que estão na disputa.
+                        </p>
+                    `;
+                    btnConfirma.disabled = true;
+                    inputNumero.value = '';
+                }
+            } else {
+                chapaSelecionada = null;
+                infoChapa.innerHTML = '';
+                btnConfirma.disabled = true;
+            }
+        });
+
+        function limparUrna() {
+            inputNumero.value = '';
+            infoChapa.innerHTML = '';
+            chapaSelecionada = null;
+            nomeChapa = '';
+            btnConfirma.disabled = true;
+            inputNumero.focus();
+        }
+
+        btnCorrige.addEventListener('click', limparUrna);
+
+        btnConfirma.addEventListener('click', async () => {
+            if (!chapaSelecionada) return;
+            
+            btnConfirma.disabled = true;
+            btnCorrige.disabled = true;
+            inputNumero.disabled = true;
+            
+            try {
+                await addDoc(collection(db, "votos"), {
+                    numero: chapaSelecionada,
+                    nome_chapa: nomeChapa,
+                    urna: urnaAtual,
+                    data_hora: serverTimestamp()
+                });
+                
+                somUrna.play().catch(e => console.log('Áudio não carregado:', e));
+                mostrarTela(telaFim);
+                
+                setTimeout(async () => {
+                    await setDoc(doc(db, "status_urnas", `urna_${urnaAtual}`), {
+                        bloqueada: true,
+                        ultima_atualizacao: serverTimestamp()
+                    }, { merge: true });
+                }, 1500);
+
+            } catch (error) {
+                console.error("Erro ao gravar voto: ", error);
+                alert("Ocorreu um erro ao conectar com o banco de dados.");
+            } finally {
+                inputNumero.disabled = false;
+                btnCorrige.disabled = false;
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!telaVotacao.classList.contains('hidden')) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!btnConfirma.disabled) btnConfirma.click();
+                } else if (e.key === '-') {
+                    e.preventDefault();
+                    btnCorrige.click();
+                }
+            }
+        });
+
+        btnLogin.addEventListener('click', async () => {
+            const email = document.getElementById('admin-email').value;
+            const senha = document.getElementById('admin-senha').value;
+            const erroMsg = document.getElementById('admin-erro');
+            
+            if (!email || !senha) return;
+
+            btnLogin.innerText = 'Autenticando...';
+            erroMsg.classList.add('hidden');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, senha);
+                document.getElementById('admin-email').value = '';
+                document.getElementById('admin-senha').value = '';
+                window.location.href = "painel-admin.html";
+                
+            } catch (error) {
+                erroMsg.innerText = "E-mail ou senha incorretos.";
+                erroMsg.classList.remove('hidden');
+                console.error(error);
+            } finally {
+                btnLogin.innerText = 'Entrar';
+            }
+        });
+    </script>
+</body>
+</html>
