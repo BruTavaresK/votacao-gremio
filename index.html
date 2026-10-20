@@ -82,7 +82,7 @@
                 <input type="text" id="numero-chapa" maxlength="2" placeholder="00" class="text-center text-5xl w-32 h-20 border-4 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 tracking-widest font-mono shadow-inner">
             </div>
             
-            <div id="info-chapa" class="h-32 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-2">
+            <div id="info-chapa" class="h-40 flex flex-col items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-2">
             </div>
 
             <!-- Botões da Urna -->
@@ -207,6 +207,7 @@
         }
 
         // Lógica de Digitação na Urna
+        // Lógica de Digitação na Urna
         inputNumero.addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
             const numero = e.target.value;
@@ -217,7 +218,7 @@
                     nomeChapa = 'Aurora';
                     infoChapa.innerHTML = `
                         <div class="text-2xl font-black text-blue-700 uppercase tracking-wide mb-1">Chapa ${nomeChapa}</div>
-                        <img src="aurora.png" alt="Logo Chapa Aurora" class="w-20 h-20 object-contain drop-shadow-md">
+                        <img src="aurora.png" alt="Logo Chapa Aurora" class="w-28 h-28 object-contain drop-shadow-md">
                     `;
                     btnConfirma.disabled = false;
 
@@ -226,7 +227,7 @@
                     nomeChapa = 'Evolution';
                     infoChapa.innerHTML = `
                         <div class="text-2xl font-black text-purple-700 uppercase tracking-wide mb-1">Chapa ${nomeChapa}</div>
-                        <img src="evolution.png" alt="Logo Chapa Evolution" class="w-20 h-20 object-contain drop-shadow-md">
+                        <img src="evolution.png" alt="Logo Chapa Evolution" class="w-28 h-28 object-contain drop-shadow-md">
                     `;
                     btnConfirma.disabled = false;
 

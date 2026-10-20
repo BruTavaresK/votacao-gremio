@@ -6,16 +6,35 @@
     <title>Painel Admin - Votação Grêmio</title>
     <!-- Importando Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilização para Impressão Oficial */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #relatorio-impressao, #relatorio-impressao * {
+                visibility: visible;
+            }
+            #relatorio-impressao {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: block !important;
+                color: black !important;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen font-sans">
 
-    <!-- NAV BAR SUPERIOR -->
-    <nav class="bg-gray-900 text-white p-4 shadow-md flex justify-between items-center px-6">
+    <!-- NAV BAR SUPERIOR (Oculto na impressão) -->
+    <nav class="bg-gray-900 text-white p-4 shadow-md flex justify-between items-center px-6 no-print">
         <div class="flex items-center gap-4">
             <img src="portal.png" alt="Portal da Juréia" class="w-10 h-10 object-contain">
             <div>
                 <h1 class="font-bold text-lg leading-tight">Painel Administrativo</h1>
-                <p class="text-xs text-gray-400">EE Portal da Juréia - Apuração em Tempo Real</p>
+                <p class="text-xs text-gray-400">EE Portal da Juréia - Gestão das Eleições</p>
             </div>
         </div>
         <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-4 rounded transition cursor-pointer">
@@ -23,7 +42,7 @@
         </button>
     </nav>
 
-    <div class="max-w-4xl mx-auto p-6 space-y-6">
+    <div class="max-w-4xl mx-auto p-6 space-y-6 no-print">
 
         <!-- GERENCIAMENTO E LIBERAÇÃO DAS URNAS -->
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -32,7 +51,6 @@
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
                 <!-- CARD URNA 1 -->
                 <div class="border-2 border-gray-200 rounded-xl p-5 space-y-4 bg-gray-50">
                     <div class="flex justify-between items-center border-b pb-3">
@@ -72,57 +90,20 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- PLACAR EM TEMPO REAL -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-6">
-            <div class="flex justify-between items-center border-b pb-4">
-                <h2 class="text-xl font-bold text-gray-800">Resultado da Apuração</h2>
-                <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span> Ao vivo
-                </span>
-            </div>
-
-            <!-- CARD TOTAL DE VOTOS -->
-            <div class="bg-gray-50 p-4 rounded-lg border text-center">
-                <p class="text-sm font-bold text-gray-500 uppercase tracking-wide">Total de Votos Computados</p>
-                <p id="total-votos" class="text-5xl font-black text-gray-900 my-1">0</p>
-            </div>
-
-            <!-- CHAPA 42 - AURORA -->
-            <div class="space-y-2">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded">Nº 42</span>
-                        <h3 class="text-xl font-black text-gray-800 inline ml-2">Chapa Aurora 🌅</h3>
-                    </div>
-                    <div class="text-right">
-                        <span id="votos-aurora" class="text-2xl font-bold text-gray-900">0</span>
-                        <span id="pct-aurora" class="text-sm text-gray-500 ml-1">(0%)</span>
-                    </div>
+        <!-- EMISSÃO E IMPRESSÃO DE RESULTADOS -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Emissão de Relatório Oficial</h2>
+                    <p class="text-xs text-gray-500 mt-1">A visualização em tela está desativada. Para gerar o boletim impresso de apuração, clique no botão ao lado.</p>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                    <div id="bar-aurora" class="bg-blue-600 h-full transition-all duration-500 w-0"></div>
-                </div>
-            </div>
-
-            <!-- CHAPA 27 - EVOLUTION -->
-            <div class="space-y-2">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <span class="text-xs font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded">Nº 27</span>
-                        <h3 class="text-xl font-black text-gray-800 inline ml-2">Chapa Evolution 🚀</h3>
-                    </div>
-                    <div class="text-right">
-                        <span id="votos-evolution" class="text-2xl font-bold text-gray-900">0</span>
-                        <span id="pct-evolution" class="text-sm text-gray-500 ml-1">(0%)</span>
-                    </div>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                    <div id="bar-evolution" class="bg-purple-600 h-full transition-all duration-500 w-0"></div>
-                </div>
+                
+                <button id="btn-solicitar-impressao" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-lg shadow transition flex items-center gap-2 text-sm cursor-pointer whitespace-nowrap">
+                    <span>🖨️</span> Imprimir Boletim de Apuração
+                </button>
             </div>
         </div>
 
@@ -139,7 +120,25 @@
 
     </div>
 
-    <!-- MODAL DE SENHA PARA CONFIRMAÇÃO DE APAGAR BANCO -->
+    <!-- MODAL DE SENHA PARA IMPRESSÃO (impressao1234) -->
+    <div id="modal-senha-impressao" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full space-y-4">
+            <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span>🖨️</span> Autorização de Impressão
+            </h3>
+            <p class="text-sm text-gray-600">Para emitir e imprimir o boletim oficial de apuração, digite a senha autorizada:</p>
+            
+            <input type="password" id="senha-impressao" placeholder="Digite a senha de impressão..." class="w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500">
+            <p id="msg-erro-senha-impressao" class="text-red-600 text-xs font-bold hidden">Senha incorreta!</p>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <button id="btn-cancelar-impressao" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-bold cursor-pointer">Cancelar</button>
+                <button id="btn-confirmar-impressao" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg cursor-pointer">Confirmar e Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE SENHA PARA ZERAR BANCO (adm12345) -->
     <div id="modal-senha" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full space-y-4">
             <h3 class="text-xl font-bold text-gray-900">Confirmação de Segurança</h3>
@@ -155,6 +154,65 @@
         </div>
     </div>
 
+    <!-- ESTRUTURA OCULTA DO RELATÓRIO OFICIAL PARA IMPRESSÃO -->
+    <div id="relatorio-impressao" class="hidden p-8 max-w-2xl mx-auto border-2 border-gray-800">
+        <div class="text-center border-b-2 border-gray-800 pb-4 mb-6 flex justify-between items-center">
+            <img src="portal.png" alt="Logo Escola" class="w-16 h-16 object-contain">
+            <div>
+                <h1 class="text-2xl font-black uppercase tracking-wide">EE PORTAL DA JURÉIA</h1>
+                <h2 class="text-lg font-bold">Eleições do Grêmio Estudantil Paulista</h2>
+                <p class="text-sm italic">Boletim de Apuração Oficial</p>
+            </div>
+            <img src="gresp.png" alt="Logo Grêmio" class="w-16 h-16 object-contain">
+        </div>
+
+        <div class="mb-6 bg-gray-100 p-3 rounded border text-sm flex justify-between">
+            <div><strong>Data/Horário da Impressão:</strong> <span id="print-data-hora">--/--/---- --:--</span></div>
+            <div><strong>Status:</strong> Finalizado</div>
+        </div>
+
+        <table class="w-full text-left border-collapse border border-gray-800 mb-6">
+            <thead>
+                <tr class="bg-gray-200 border-b border-gray-800">
+                    <th class="p-3 border-r border-gray-800">Opção / Chapa</th>
+                    <th class="p-3 border-r border-gray-800 text-center">Número</th>
+                    <th class="p-3 border-r border-gray-800 text-center">Total de Votos</th>
+                    <th class="p-3 text-center">Porcentagem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-gray-800">
+                    <td class="p-3 border-r border-gray-800 font-bold">Chapa Aurora</td>
+                    <td class="p-3 border-r border-gray-800 text-center font-mono">42</td>
+                    <td id="print-votos-aurora" class="p-3 border-r border-gray-800 text-center font-bold">0</td>
+                    <td id="print-pct-aurora" class="p-3 text-center">0%</td>
+                </tr>
+                <tr class="border-b border-gray-800">
+                    <td class="p-3 border-r border-gray-800 font-bold">Chapa Evolution</td>
+                    <td class="p-3 border-r border-gray-800 text-center font-mono">27</td>
+                    <td id="print-votos-evolution" class="p-3 border-r border-gray-800 text-center font-bold">0</td>
+                    <td id="print-pct-evolution" class="p-3 text-center">0%</td>
+                </tr>
+                <tr class="bg-gray-100 font-black">
+                    <td colspan="2" class="p-3 border-r border-gray-800 text-right">TOTAL GERAL DE VOTOS:</td>
+                    <td id="print-total-votos" class="p-3 border-r border-gray-800 text-center">0</td>
+                    <td class="p-3 text-center">100%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-12 pt-8 border-t border-gray-400 grid grid-cols-2 gap-8 text-center text-xs">
+            <div>
+                <div class="border-b border-gray-800 mb-1 h-8"></div>
+                <p class="font-bold">Comissão Eleitoral</p>
+            </div>
+            <div>
+                <div class="border-b border-gray-800 mb-1 h-8"></div>
+                <p class="font-bold">Direção Escolar</p>
+            </div>
+        </div>
+    </div>
+
     <!-- LÓGICA JAVASCRIPT -->
     <script type="module">
         import { signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
@@ -163,7 +221,7 @@
         // IMPORTA O FIREBASE DO ARQUIVO SEPARADO
         import { auth, db } from "./firebase.js";
 
-        // 1. Escuta o Status de Bloqueio da Urna 1
+        // 1. Escuta em Tempo Real o Status de Bloqueio da Urna 1
         const statusEl1 = document.getElementById('status-urna-1');
         const btnLiberar1 = document.getElementById('btn-liberar-urna-1');
 
@@ -184,7 +242,7 @@
             }
         });
 
-        // 2. Escuta o Status de Bloqueio da Urna 2
+        // 2. Escuta em Tempo Real o Status de Bloqueio da Urna 2
         const statusEl2 = document.getElementById('status-urna-2');
         const btnLiberar2 = document.getElementById('btn-liberar-urna-2');
 
@@ -227,16 +285,9 @@
             window.open('index.html?urna=2', '_blank');
         });
 
-        // 3. Monitoramento dos Votos em Tempo Real
-        const elTotal = document.getElementById('total-votos');
-        const elAurora = document.getElementById('votos-aurora');
-        const elEvolution = document.getElementById('votos-evolution');
-        const elPctAurora = document.getElementById('pct-aurora');
-        const elPctEvolution = document.getElementById('pct-evolution');
-        const barAurora = document.getElementById('bar-aurora');
-        const barEvolution = document.getElementById('bar-evolution');
-
-        onSnapshot(collection(db, "votos"), (snapshot) => {
+        // 3. Função Interna de Consulta ao Banco para Impressão
+        async function buscarEProcessarVotos() {
+            const snapshot = await getDocs(collection(db, "votos"));
             let total = snapshot.size;
             let aurora = 0;
             let evolution = 0;
@@ -247,49 +298,98 @@
                 if (voto.numero === '27') evolution++;
             });
 
-            elTotal.innerText = total;
-            elAurora.innerText = aurora;
-            elEvolution.innerText = evolution;
-
             let pctA = total > 0 ? ((aurora / total) * 100).toFixed(1) : 0;
             let pctE = total > 0 ? ((evolution / total) * 100).toFixed(1) : 0;
 
-            elPctAurora.innerText = `(${pctA}%)`;
-            elPctEvolution.innerText = `(${pctE}%)`;
+            return { total, aurora, evolution, pctA, pctE };
+        }
 
-            barAurora.style.width = `${pctA}%`;
-            barEvolution.style.width = `${pctE}%`;
+        // 4. Lógica de Impressão com Senha (impressao1234)
+        const modalImpressao = document.getElementById('modal-senha-impressao');
+        const btnSolicitarImpressao = document.getElementById('btn-solicitar-impressao');
+        const btnCancelarImpressao = document.getElementById('btn-cancelar-impressao');
+        const btnConfirmarImpressao = document.getElementById('btn-confirmar-impressao');
+        const inputSenhaImpressao = document.getElementById('senha-impressao');
+        const msgErroImpressao = document.getElementById('msg-erro-senha-impressao');
+
+        btnSolicitarImpressao.addEventListener('click', () => {
+            modalImpressao.classList.remove('hidden');
+            inputSenhaImpressao.value = '';
+            msgErroImpressao.classList.add('hidden');
+            inputSenhaImpressao.focus();
         });
 
-        // 4. Lógica de Zerar o Banco de Dados com Senha "adm12345"
-        const modal = document.getElementById('modal-senha');
-        const btnZerar = document.getElementById('btn-zerar');
-        const btnCancelar = document.getElementById('btn-cancelar-zerar');
-        const btnConfirmar = document.getElementById('btn-confirmar-zerar');
-        const inputSenha = document.getElementById('senha-confirmacao');
-        const msgErro = document.getElementById('msg-erro-senha');
-
-        btnZerar.addEventListener('click', () => {
-            modal.classList.remove('hidden');
-            inputSenha.value = '';
-            msgErro.classList.add('hidden');
-            inputSenha.focus();
+        btnCancelarImpressao.addEventListener('click', () => {
+            modalImpressao.classList.add('hidden');
         });
 
-        btnCancelar.addEventListener('click', () => {
-            modal.classList.add('hidden');
-        });
+        btnConfirmarImpressao.addEventListener('click', async () => {
+            const senha = inputSenhaImpressao.value;
 
-        btnConfirmar.addEventListener('click', async () => {
-            const senhaDigitada = inputSenha.value;
-
-            if (senhaDigitada !== 'adm12345') {
-                msgErro.classList.remove('hidden');
+            if (senha !== 'impressao1234') {
+                msgErroImpressao.classList.remove('hidden');
                 return;
             }
 
-            btnConfirmar.disabled = true;
-            btnConfirmar.innerText = 'Apagando...';
+            btnConfirmarImpressao.disabled = true;
+            btnConfirmarImpressao.innerText = 'Gerando Relatório...';
+
+            try {
+                // Consulta o Firebase e preenche o relatório
+                const dados = await buscarEProcessarVotos();
+                
+                document.getElementById('print-total-votos').innerText = dados.total;
+                document.getElementById('print-votos-aurora').innerText = dados.aurora;
+                document.getElementById('print-pct-aurora').innerText = `${dados.pctA}%`;
+                document.getElementById('print-votos-evolution').innerText = dados.evolution;
+                document.getElementById('print-pct-evolution').innerText = `${dados.pctE}%`;
+                
+                const agora = new Date();
+                document.getElementById('print-data-hora').innerText = agora.toLocaleString('pt-BR');
+
+                modalImpressao.classList.add('hidden');
+
+                // Executa a janela de impressão do navegador
+                window.print();
+
+            } catch (error) {
+                console.error("Erro ao gerar impressão: ", error);
+                alert("Erro ao consultar os dados para impressão.");
+            } finally {
+                btnConfirmarImpressao.disabled = false;
+                btnConfirmarImpressao.innerText = 'Confirmar e Imprimir';
+            }
+        });
+
+        // 5. Lógica de Zerar o Banco de Dados com Senha "adm12345"
+        const modalZerar = document.getElementById('modal-senha');
+        const btnZerar = document.getElementById('btn-zerar');
+        const btnCancelarZerar = document.getElementById('btn-cancelar-zerar');
+        const btnConfirmarZerar = document.getElementById('btn-confirmar-zerar');
+        const inputSenhaZerar = document.getElementById('senha-confirmacao');
+        const msgErroZerar = document.getElementById('msg-erro-senha');
+
+        btnZerar.addEventListener('click', () => {
+            modalZerar.classList.remove('hidden');
+            inputSenhaZerar.value = '';
+            msgErroZerar.classList.add('hidden');
+            inputSenhaZerar.focus();
+        });
+
+        btnCancelarZerar.addEventListener('click', () => {
+            modalZerar.classList.add('hidden');
+        });
+
+        btnConfirmarZerar.addEventListener('click', async () => {
+            const senhaDigitada = inputSenhaZerar.value;
+
+            if (senhaDigitada !== 'adm12345') {
+                msgErroZerar.classList.remove('hidden');
+                return;
+            }
+
+            btnConfirmarZerar.disabled = true;
+            btnConfirmarZerar.innerText = 'Apagando...';
 
             try {
                 const snapshot = await getDocs(collection(db, "votos"));
@@ -304,18 +404,18 @@
                 await setDoc(doc(db, "status_urnas", "urna_1"), { bloqueada: false }, { merge: true });
                 await setDoc(doc(db, "status_urnas", "urna_2"), { bloqueada: false }, { merge: true });
 
-                modal.classList.add('hidden');
+                modalZerar.classList.add('hidden');
                 alert('Votação zerada com sucesso!');
             } catch (error) {
                 console.error("Erro ao apagar votos: ", error);
                 alert("Erro ao tentar apagar o banco de dados.");
             } finally {
-                btnConfirmar.disabled = false;
-                btnConfirmar.innerText = 'Confirmar e Apagar';
+                btnConfirmarZerar.disabled = false;
+                btnConfirmarZerar.innerText = 'Confirmar e Apagar';
             }
         });
 
-        // 5. Logout do Administrador
+        // 6. Logout do Administrador
         document.getElementById('btn-logout').addEventListener('click', async () => {
             try {
                 await signOut(auth);
